@@ -1,0 +1,30 @@
+{
+  "name": "sherlockode/user-confirmation-bundle",
+  "type": "symfony-bundle",
+  "description": "",
+  "homepage": "https://github.com/sherlockode/user-confirmation-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Neil Peyssard",
+      "email": "neil@sherlockode.fr"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Sherlockode\\UserConfirmationBundle\\": ""
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  },
+  "require": {
+    "php": "^7.0",
+    "friendsofsymfony/user-bundle": "~2.0"
+  }
+}

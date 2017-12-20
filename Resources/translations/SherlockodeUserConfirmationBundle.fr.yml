@@ -1,0 +1,15 @@
+confirmation:
+    email:
+        message: |
+            Bonjour %username% !
+
+            Votre compte vient d'être créé. Vous pouvez dès à présent activer celui-ci et définir votre mot de passe via le lien suivant:
+
+            %confirmationUrl%
+
+            Cordialement,
+    form:
+        passwords_must_match: Les mots de passes doivent correspondre
+        password: Mot de passe
+        password_confirm: Confirmer le mot de passe
+        submit_button: Je créé mon compte

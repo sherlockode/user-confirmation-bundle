@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+
+    Sherlockode\UserConfirmationBundle\Controller\:
+        resource: '../../Controller/*'
+        tags: ['controller.service_arguments']
+    Sherlockode\UserConfirmationBundle\Manager\:
+        resource: '../../Manager/*'
+
+    Sherlockode\UserConfirmationBundle\Manager\MailManager:
+        arguments:
+            $senderEmail: '%sherlockode_user_confirmation.from_email%'
+            $confirmationEmailTemplate: '%sherlockode_user_confirmation.templates.confirmation_email%'
+
