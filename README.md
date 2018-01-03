@@ -46,9 +46,9 @@ Then create the configuration in `app/config/config.yml`
 
 ``` yaml
 sherlockode_user_confirmation:
-    from_email: no-reply@awesome.com                                        # From email address
-    email_subject: Please confirm your account                              # The subject for the confirmation email (optionnal)
-    redirect_after_confirmation: admin_dashboard                            # The route name to redirect the user
+    from_email: no-reply@awesome.com                # From email address
+    email_subject: Please confirm your account      # The subject for the confirmation email (optional)
+    redirect_after_confirmation: admin_dashboard    # The route name to redirect the user
 ```
 
 ## Customization
