@@ -12,4 +12,5 @@ services:
         arguments:
             $senderEmail: '%sherlockode_user_confirmation.from_email%'
             $confirmationEmailTemplate: '%sherlockode_user_confirmation.templates.confirmation_email%'
+            $emailSubject: '%sherlockode_user_confirmation.email_subject%'
 

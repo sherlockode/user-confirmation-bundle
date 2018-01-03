@@ -4,6 +4,7 @@ namespace Sherlockode\UserConfirmationBundle\Manager;
 
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\Translator;
 use FOS\UserBundle\Model\UserInterface;
 
 class MailManager
@@ -24,6 +25,11 @@ class MailManager
     private $urlGenerator;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * @var string
      */
     private $senderEmail;
@@ -34,26 +40,37 @@ class MailManager
     private $confirmationEmailTemplate;
 
     /**
+     * @var string
+     */
+    private $emailSubject;
+
+    /**
      * MailManager constructor.
      *
      * @param \Swift_Mailer         $mailer
      * @param EngineInterface       $templating
      * @param UrlGeneratorInterface $urlGenerator
+     * @param Translator            $translator
      * @param string                $senderEmail
      * @param string                $confirmationEmailTemplate
+     * @param string                $emailSubject
      */
     public function __construct(
         \Swift_Mailer $mailer,
         EngineInterface $templating,
         UrlGeneratorInterface $urlGenerator,
+        Translator $translator,
         $senderEmail,
-        $confirmationEmailTemplate
+        $confirmationEmailTemplate,
+        $emailSubject
     ) {
         $this->mailer = $mailer;
         $this->templating = $templating;
         $this->urlGenerator = $urlGenerator;
+        $this->translator = $translator;
         $this->senderEmail = $senderEmail;
         $this->confirmationEmailTemplate = $confirmationEmailTemplate;
+        $this->emailSubject = $emailSubject;
     }
 
     /**
@@ -63,9 +80,7 @@ class MailManager
      */
     public function sendAccountConfirmationEmail(UserInterface $user)
     {
-        $from = $this->senderEmail;
-        $to = $user->getUsername();
-        $subject = '';
+        $subject = $this->translator->trans($this->emailSubject, [], 'SherlockodeUserConfirmationBundle');
         $confirmationUrl = $this->urlGenerator->generate(
             'sherlockode_userconfirmation_set_password',
             [
@@ -81,7 +96,7 @@ class MailManager
             ]
         );
 
-        return $this->sendMessage($from, $to, $subject, $body);
+        return $this->sendMessage($this->senderEmail, $user->getUsername(), $subject, $body);
     }
 
     /**

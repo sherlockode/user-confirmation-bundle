@@ -30,6 +30,7 @@ class SherlockodeUserConfirmationExtension extends Extension
             'sherlockode_user_confirmation.templates.confirmation_email',
             $config['templates']['confirmation_email']
         );
+        $container->setParameter('sherlockode_user_confirmation.email_subject', $config['email_subject']);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
