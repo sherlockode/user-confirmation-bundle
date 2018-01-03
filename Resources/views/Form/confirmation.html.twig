@@ -1,17 +1,11 @@
-{% extends parentTemplate %}
-
-{% block sherlockode_user_confirmation_form %}
-    {{ form_start(form) }}
-    <div class="form-group">
-        {{ form_errors(form.password.first) }}
-        {{ form_widget(form.password.first) }}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+    <div>
+        {% block sherlockode_user_confirmation_form %}{% endblock %}
     </div>
-    <div class="form-group">
-        {{ form_errors(form.password.second) }}
-        {{ form_widget(form.password.second) }}
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">
-        {{ 'confirmation.form.submit_button'|trans({}, 'SherlockodeUserConfirmationBundle') }}
-    </button>
-    {{ form_end(form) }}
-{% endblock %}
+</body>
+</html>

@@ -26,7 +26,7 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->children()
                         ->scalarNode('confirmation_form')
-                            ->isRequired()
+                            ->defaultValue('SherlockodeUserConfirmationBundle:Form:confirmation.html.twig')
                         ->end()
                         ->scalarNode('confirmation_email')
                             ->defaultValue('SherlockodeUserConfirmationBundle:Email:confirmation.html.twig')
