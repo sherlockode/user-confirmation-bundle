@@ -47,59 +47,38 @@ Then create the configuration in `app/config/config.yml`
 ``` yaml
 sherlockode_user_confirmation:
     from_email: no-reply@awesome.com                                        # From email address
+    email_subject: Please confirm your account                              # The subject for the confirmation email (optionnal)
     redirect_after_confirmation: admin_dashboard                            # The route name to redirect the user
-    templates:
-        confirmation_form: AppBundle:Registration:confirmation.html.twig    # A wrapper template for the password confirmation form (see below)
 ```
 
-### Step 4: Wrap the form
+## Customization
 
-You can now set your confirmation form template (see `config.yml`) like this one
+### Extend the confirmation form template
+
+To extend the confirmation form template, just update your `config.yml`
+
+``` yaml
+sherlockode_user_confirmation:
+    templates:
+        confirmation_form: AppBundle:Registration:confirmation.html.twig
+```
+
+Then in your template, just add a block `sherlockode_user_confirmation_form`
 
 ``` twig
-{% extends "@FOSUser/layout.html.twig" %}
-
-{% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-                <div class="form-container">
-                    <div>
-                        <p class="text-center">Please set your password</p>
-                    </div>
-                    {% block sherlockode_user_confirmation_form %}{% endblock %}
-                </div>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+    <h1>My awesome app !</h1>
+    <div>
+        {# The form will be render here #}
+        {% block sherlockode_user_confirmation_form %}{% endblock %}
     </div>
-{% endblock %}
-```
-
-## Usage
-
-### Send email for a new user
-
-When you create a new user, you can use the mail manager to send the confirmation message.
-
-``` php
-<?php
-
-namespace AppBundle\Controller;
-
-use Sherlockode\UserConfirmationBundle\Manager\MailManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-class UserController extends Controller
-{
-    public function createUser(MailManager $mailManager)
-    {
-        // Create your user from whatever you want
-        // ...
-        
-        // Send confirmation email
-        $mailManager->sendAccountConfirmationEmail($user);
-    }
-}
+</body>
+</html>
 ```
 
 ### Extend the confirmation email
