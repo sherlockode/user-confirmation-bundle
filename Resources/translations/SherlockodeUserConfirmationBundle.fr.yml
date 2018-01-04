@@ -1,5 +1,6 @@
 confirmation:
     email:
+        subject: Confirmation de votre compte
         message: |
             Bonjour %username% !
 
