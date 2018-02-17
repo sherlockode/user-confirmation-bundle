@@ -4,7 +4,7 @@ namespace Sherlockode\UserConfirmationBundle\Manager;
 
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use FOS\UserBundle\Model\UserInterface;
 
 class MailManager
@@ -25,7 +25,7 @@ class MailManager
     private $urlGenerator;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -50,7 +50,7 @@ class MailManager
      * @param \Swift_Mailer         $mailer
      * @param EngineInterface       $templating
      * @param UrlGeneratorInterface $urlGenerator
-     * @param Translator            $translator
+     * @param TranslatorInterface   $translator
      * @param string                $senderEmail
      * @param string                $confirmationEmailTemplate
      * @param string                $emailSubject
@@ -59,7 +59,7 @@ class MailManager
         \Swift_Mailer $mailer,
         EngineInterface $templating,
         UrlGeneratorInterface $urlGenerator,
-        Translator $translator,
+        TranslatorInterface $translator,
         $senderEmail,
         $confirmationEmailTemplate,
         $emailSubject
@@ -80,6 +80,10 @@ class MailManager
      */
     public function sendAccountConfirmationEmail(UserInterface $user)
     {
+        if (!$user->getConfirmationToken()) {
+            return false;
+        }
+
         $subject = $this->translator->trans($this->emailSubject, [], 'SherlockodeUserConfirmationBundle');
         $confirmationUrl = $this->urlGenerator->generate(
             'sherlockode_userconfirmation_set_password',
