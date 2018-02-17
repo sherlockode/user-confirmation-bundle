@@ -2,8 +2,8 @@
 
 namespace Sherlockode\UserConfirmationBundle\Controller;
 
-use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Model\UserManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sherlockode\UserConfirmationBundle\Form\Type\ConfirmPasswordType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,7 +21,7 @@ class AccountConfirmationController extends Controller
      * @Route("/registration/{confirmationToken}", name="sherlockode_userconfirmation_set_password")
      *
      * @param Request               $request
-     * @param UserManager           $userManager
+     * @param UserManagerInterface  $userManager
      * @param TokenStorageInterface $tokenStorage
      * @param string                $confirmationToken
      *
@@ -29,26 +29,19 @@ class AccountConfirmationController extends Controller
      */
     public function setPasswordAction(
         Request $request,
-        UserManager $userManager,
+        UserManagerInterface $userManager,
         TokenStorageInterface $tokenStorage,
         $confirmationToken
     ) {
-        $user = $userManager->findUserBy(['confirmationToken' => $confirmationToken]);
+        $user = $userManager->findUserByConfirmationToken($confirmationToken);
         if (!$user instanceof UserInterface) {
             throw $this->createAccessDeniedException('Access denied');
         }
 
-        $form = $this->createForm(ConfirmPasswordType::class, ['_confirmationToken' => $confirmationToken]);
+        $form = $this->createForm(ConfirmPasswordType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $confirmationToken = $form->getData()['_confirmationToken'];
-            $user = $userManager->findUserBy(['confirmationToken' => $confirmationToken]);
-
-            if (!$user instanceof UserInterface) {
-                throw $this->createAccessDeniedException('Access denied');
-            }
-
             $user->setPlainPassword($form->getData()['password']);
             $user->setConfirmationToken(null);
             $user->setEnabled(true);
