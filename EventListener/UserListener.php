@@ -3,8 +3,9 @@
 namespace Sherlockode\UserConfirmationBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Manager\MailManager;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserListener
 {
@@ -13,11 +14,37 @@ class UserListener
      */
     private $mailManager;
 
-    public function __construct(MailManager $mailManager)
+    /**
+     * @var TokenGeneratorInterface
+     */
+    private $tokenGenerator;
+
+    /**
+     * @param MailManager             $mailManager
+     * @param TokenGeneratorInterface $tokenGenerator
+     */
+    public function __construct(MailManager $mailManager, TokenGeneratorInterface $tokenGenerator)
     {
         $this->mailManager = $mailManager;
+        $this->tokenGenerator = $tokenGenerator;
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        $object = $args->getObject();
+
+        if (!$object instanceof UserInterface) {
+            return;
+        }
+
+        $object->setEnabled(false);
+        if (null === $object->getConfirmationToken()) {
+            $object->setConfirmationToken($this->tokenGenerator->generateToken());
+        }
+    }
     /**
      * @param LifecycleEventArgs $args
      */
@@ -25,7 +52,7 @@ class UserListener
     {
         $object = $args->getObject();
 
-        if (!$object instanceof UserInterface) {
+        if (!$object instanceof UserInterface || $object->isEnabled()) {
             return;
         }
 
