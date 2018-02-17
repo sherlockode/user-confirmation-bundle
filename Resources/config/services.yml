@@ -15,5 +15,6 @@ services:
             $emailSubject: '%sherlockode_user_confirmation.email_subject%'
     Sherlockode\UserConfirmationBundle\EventListener\UserListener:
         tags:
+            - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: postPersist }
 
