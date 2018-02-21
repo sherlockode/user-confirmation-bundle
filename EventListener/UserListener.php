@@ -5,12 +5,12 @@ namespace Sherlockode\UserConfirmationBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
-use Sherlockode\UserConfirmationBundle\Manager\MailManager;
+use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
 
 class UserListener
 {
     /**
-     * @var MailManager
+     * @var MailManagerInterface
      */
     private $mailManager;
 
@@ -20,10 +20,10 @@ class UserListener
     private $tokenGenerator;
 
     /**
-     * @param MailManager             $mailManager
+     * @param MailManagerInterface    $mailManager
      * @param TokenGeneratorInterface $tokenGenerator
      */
-    public function __construct(MailManager $mailManager, TokenGeneratorInterface $tokenGenerator)
+    public function __construct(MailManagerInterface $mailManager, TokenGeneratorInterface $tokenGenerator)
     {
         $this->mailManager = $mailManager;
         $this->tokenGenerator = $tokenGenerator;
