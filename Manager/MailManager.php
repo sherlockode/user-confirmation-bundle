@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use FOS\UserBundle\Model\UserInterface;
 
-class MailManager
+class MailManager implements MailManagerInterface
 {
     /**
      * @var \Swift_Mailer
