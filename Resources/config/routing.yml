@@ -1,0 +1,3 @@
+sherlockode_user_confirmation_set_password:
+    path: /registration/{confirmationToken}
+    defaults: { _controller: sherlockode_user_confirmation.controller.confirmation:setPasswordAction }

@@ -1,20 +1,27 @@
 services:
-    _defaults:
-        autowire: true
-
-    Sherlockode\UserConfirmationBundle\Controller\:
-        resource: '../../Controller/*'
-        tags: ['controller.service_arguments']
-    Sherlockode\UserConfirmationBundle\Manager\:
-        resource: '../../Manager/*'
-
-    Sherlockode\UserConfirmationBundle\Manager\MailManager:
+    sherlockode_user_confirmation.controller.confirmation:
+        class: Sherlockode\UserConfirmationBundle\Controller\AccountConfirmationController
         arguments:
-            $senderEmail: '%sherlockode_user_confirmation.from_email%'
-            $confirmationEmailTemplate: '%sherlockode_user_confirmation.templates.confirmation_email%'
-            $emailSubject: '%sherlockode_user_confirmation.email_subject%'
-    Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface: '@Sherlockode\UserConfirmationBundle\Manager\MailManager'
-    Sherlockode\UserConfirmationBundle\EventListener\UserListener:
+            - '@fos_user.user_manager'
+            - '@security.token_storage'
+
+    sherlockode_user_confirmation.mail_manager:
+        class: Sherlockode\UserConfirmationBundle\Manager\MailManager
+        arguments:
+            - '@mailer'
+            - '@templating'
+            - '@router'
+            - '@translator'
+            - '%sherlockode_user_confirmation.from_email%'
+            - '%sherlockode_user_confirmation.templates.confirmation_email%'
+            - '%sherlockode_user_confirmation.email_subject%'
+
+    Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface: '@sherlockode_user_confirmation.mail_manager'
+    sherlockode_user_confirmation.listener.user:
+        class: Sherlockode\UserConfirmationBundle\EventListener\UserListener
+        arguments:
+            - '@sherlockode_user_confirmation.mail_manager'
+            - '@fos_user.util.token_generator'
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: postPersist }

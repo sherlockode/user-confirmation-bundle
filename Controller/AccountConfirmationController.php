@@ -4,7 +4,6 @@ namespace Sherlockode\UserConfirmationBundle\Controller;
 
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sherlockode\UserConfirmationBundle\Form\Type\ConfirmPasswordType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,23 +16,30 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AccountConfirmationController extends Controller
 {
+    private $userManager;
+    private $tokenStorage;
+
     /**
-     * @Route("/registration/{confirmationToken}", name="sherlockode_userconfirmation_set_password")
-     *
-     * @param Request               $request
      * @param UserManagerInterface  $userManager
      * @param TokenStorageInterface $tokenStorage
-     * @param string                $confirmationToken
+     */
+    public function __construct(UserManagerInterface $userManager, TokenStorageInterface $tokenStorage)
+    {
+        $this->userManager = $userManager;
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $confirmationToken
      *
      * @return Response
      */
     public function setPasswordAction(
         Request $request,
-        UserManagerInterface $userManager,
-        TokenStorageInterface $tokenStorage,
         $confirmationToken
     ) {
-        $user = $userManager->findUserByConfirmationToken($confirmationToken);
+        $user = $this->userManager->findUserByConfirmationToken($confirmationToken);
         if (!$user instanceof UserInterface) {
             throw $this->createAccessDeniedException('Access denied');
         }
@@ -45,9 +51,9 @@ class AccountConfirmationController extends Controller
             $user->setPlainPassword($form->getData()['password']);
             $user->setConfirmationToken(null);
             $user->setEnabled(true);
-            $userManager->updateUser($user);
+            $this->userManager->updateUser($user);
             $usernamePasswordToken = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $tokenStorage->setToken($usernamePasswordToken);
+            $this->tokenStorage->setToken($usernamePasswordToken);
 
             return $this->redirectToRoute(
                 $this->getParameter('sherlockode_user_confirmation.redirect_after_confirmation')

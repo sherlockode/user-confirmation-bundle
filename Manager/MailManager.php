@@ -86,7 +86,7 @@ class MailManager implements MailManagerInterface
 
         $subject = $this->translator->trans($this->emailSubject, [], 'SherlockodeUserConfirmationBundle');
         $confirmationUrl = $this->urlGenerator->generate(
-            'sherlockode_userconfirmation_set_password',
+            'sherlockode_user_confirmation_set_password',
             [
                 'confirmationToken' => $user->getConfirmationToken()
             ],

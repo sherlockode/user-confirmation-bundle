@@ -37,9 +37,8 @@ public function registerBundles()
 Import the routing in `app/config/routing.yml`
 
 ``` yaml
-SherlockodeUserConfirmationBundle:
-    resource: '@SherlockodeUserConfirmationBundle/Controller/'
-    type: annotation
+sherlockode_user_confirmation:
+    resource: "@SherlockodeUserConfirmationBundle/Resources/config/routing.yml"
 ```
 
 Then create the configuration in `app/config/config.yml`
