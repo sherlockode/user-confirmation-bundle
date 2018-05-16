@@ -1,29 +1,29 @@
 {
-  "name": "sherlockode/user-confirmation-bundle",
-  "type": "symfony-bundle",
-  "description": "Bundle for the confirmation process of a user registration",
-  "homepage": "https://github.com/sherlockode/user-confirmation-bundle",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Sherlockode",
-      "email": "contact@sherlockode.fr"
+    "name": "sherlockode/user-confirmation-bundle",
+    "type": "symfony-bundle",
+    "description": "Bundle for the confirmation process of a user registration",
+    "homepage": "https://github.com/sherlockode/user-confirmation-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sherlockode",
+            "email": "contact@sherlockode.fr"
+        },
+        {
+            "name": "Neil Peyssard",
+            "email": "neil@sherlockode.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sherlockode\\UserConfirmationBundle\\": ""
+        }
     },
-    {
-      "name": "Neil Peyssard",
-      "email": "neil@sherlockode.fr"
+    "require": {
+        "php": "^5.5.9|^7.0.8",
+        "friendsofsymfony/user-bundle": "^1.3|^2.0",
+        "symfony/framework-bundle": "^3.0",
+        "symfony/twig-bundle": "^3.0",
+        "twig/twig": "^1.0||^2.0"
     }
-  ],
-  "autoload": {
-    "psr-4": {
-      "Sherlockode\\UserConfirmationBundle\\": ""
-    }
-  },
-  "require": {
-    "php": "^5.5.9|^7.0.8",
-    "friendsofsymfony/user-bundle": "^1.3|^2.0",
-    "symfony/framework-bundle": "^3.0",
-    "symfony/twig-bundle": "^3.0",
-    "twig/twig": "^1.0||^2.0"
-  }
 }

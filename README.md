@@ -3,7 +3,7 @@ Sherlockode User Confirmation Bundle
 
 ## Prerequisites
 
-This version of the bundle requires Symfony 3.3+ and FosUserBundle
+This version of the bundle requires Symfony 3.* and FosUserBundle
 
 ## Installation
 
