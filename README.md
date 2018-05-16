@@ -60,7 +60,7 @@ To extend the confirmation form template, just update your `config.yml`
 ``` yaml
 sherlockode_user_confirmation:
     templates:
-        confirmation_form: AppBundle:Registration:confirmation.html.twig
+        confirmation_form: '@App/Registration/confirmation.html.twig'
 ```
 
 Then in your template, just add a block `sherlockode_user_confirmation_form`
@@ -88,7 +88,7 @@ If you want to extend the confirmation email template, just add the path in you 
 ``` yaml
 sherlockode_user_confirmation:
     templates:
-        confirmation_email: AppBundle:Email:registration.html.twig
+        confirmation_email: '@App/Email/registration.html.twig'
 ```
 
 In this template, you have access to the `user` object, and to a variable named `confirmationUrl` which contains the url to access the confirmation form.

@@ -54,12 +54,9 @@ class AccountConfirmationController extends Controller
             );
         }
 
-        return $this->render(
-            'SherlockodeUserConfirmationBundle:Form:confirmation_content.html.twig',
-            [
-                'form' => $form->createView(),
-                'parentTemplate' => $this->getParameter('sherlockode_user_confirmation.templates.confirmation_form'),
-            ]
-        );
+        return $this->render('@SherlockodeUserConfirmation/Form/confirmation_content.html.twig', [
+            'form' => $form->createView(),
+            'parentTemplate' => $this->getParameter('sherlockode_user_confirmation.templates.confirmation_form'),
+        ]);
     }
 }
