@@ -1,7 +1,7 @@
 {
     "name": "sherlockode/user-confirmation-bundle",
     "type": "symfony-bundle",
-    "description": "Bundle for the confirmation process of a user registration",
+    "description": "Symfony Bundle for the confirmation process of a user registration",
     "homepage": "https://github.com/sherlockode/user-confirmation-bundle",
     "license": "MIT",
     "authors": [
