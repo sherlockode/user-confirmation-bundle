@@ -36,7 +36,7 @@ class UserListener
     {
         $object = $args->getObject();
 
-        if (!$object instanceof UserInterface) {
+        if (!$object instanceof UserInterface || $object->isEnabled()) {
             return;
         }
 
