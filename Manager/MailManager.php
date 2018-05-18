@@ -100,7 +100,7 @@ class MailManager implements MailManagerInterface
             ]
         );
 
-        return $this->sendMessage($this->senderEmail, $user->getUsername(), $subject, $body);
+        return $this->sendMessage($this->senderEmail, $user->getEmail(), $subject, $body);
     }
 
     /**
