@@ -1,0 +1,16 @@
+confirmation:
+    email:
+        subject: Account confirmation
+        message: |
+            Hello %username% !
+
+            Your account has just been created. You can enable it by clicking the following link:
+
+            %confirmationUrl%
+
+            Best regards,
+    form:
+        passwords_must_match: Passwords must match
+        password: Password
+        password_confirm: Confirm your password
+        submit_button: Create my account
