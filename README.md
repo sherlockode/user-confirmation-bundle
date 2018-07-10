@@ -1,9 +1,12 @@
-Sherlockode User Confirmation Bundle
-====================================
+SherlockodeUserConfirmationBundle
+=================================
+
+The SherlockodeUserConfirmationBundle provides a way to create a user account that will stay disabled until the
+user visits a confirmation link sent by email and sets a password.
 
 ## Prerequisites
 
-This version of the bundle requires Symfony 3.* and FosUserBundle
+This version of the bundle requires Symfony 3.* and FOSUserBundle
 
 ## Installation
 
@@ -47,7 +50,7 @@ Then create the configuration in `app/config/config.yml`
 sherlockode_user_confirmation:
     from_email: no-reply@awesome.com                # From email address
     email_subject: Please confirm your account      # The subject for the confirmation email (optional)
-    redirect_after_confirmation: admin_dashboard    # The route name to redirect the user
+    redirect_after_confirmation: admin_dashboard    # The route name to redirect the user after confirmation
 ```
 
 ## Customization
@@ -62,7 +65,7 @@ sherlockode_user_confirmation:
         confirmation_form: '@App/Registration/confirmation.html.twig'
 ```
 
-Then in your template, just add a block `sherlockode_user_confirmation_form`
+Then in your template, add a placeholder for the block `sherlockode_user_confirmation_form`
 
 ``` twig
 <!DOCTYPE html>
@@ -82,7 +85,7 @@ Then in your template, just add a block `sherlockode_user_confirmation_form`
 
 ### Extend the confirmation email
 
-If you want to extend the confirmation email template, just add the path in you `config.yml`
+If you want to extend the confirmation email template, you should add the path in your `config.yml`
 
 ``` yaml
 sherlockode_user_confirmation:

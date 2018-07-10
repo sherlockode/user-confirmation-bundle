@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "php": "^5.5.9|^7.0.8",
+        "php": "^5.5.9 || ^7.0.8",
         "friendsofsymfony/user-bundle": "^2.0",
         "symfony/framework-bundle": "^3.0",
         "symfony/twig-bundle": "^3.0",
