@@ -114,7 +114,7 @@ class MailManager implements MailManagerInterface
      */
     private function sendMessage($from, $to, $subject, $body, $contentType = 'text/html')
     {
-        $mail = \Swift_Message::newInstance();
+        $mail = new \Swift_Message();
         $mail
             ->setFrom($from)
             ->setTo($to)
