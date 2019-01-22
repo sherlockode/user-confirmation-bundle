@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sherlockode_user_confirmation.controller.confirmation" class="Sherlockode\UserConfirmationBundle\Controller\AccountConfirmationController">
+            <argument type="service" id="fos_user.user_manager"/>
+            <argument type="service" id="security.token_storage"/>
+        </service>
+        <service id="sherlockode_user_confirmation.mail_manager" class="Sherlockode\UserConfirmationBundle\Manager\MailManager">
+            <argument type="service" id="mailer"/>
+            <argument type="service" id="templating"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="translator"/>
+            <argument>%sherlockode_user_confirmation.from_email%</argument>
+            <argument>%sherlockode_user_confirmation.templates.confirmation_email%</argument>
+            <argument>%sherlockode_user_confirmation.email_subject%</argument>
+        </service>
+        <service id="Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface" alias="sherlockode_user_confirmation.mail_manager" />
+        <service id="sherlockode_user_confirmation.listener.user" class="Sherlockode\UserConfirmationBundle\EventListener\UserListener">
+            <argument type="service" id="sherlockode_user_confirmation.mail_manager"/>
+            <argument type="service" id="fos_user.util.token_generator"/>
+            <tag name="doctrine.event_listener" event="prePersist"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
+        </service>
+    </services>
+</container>
