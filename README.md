@@ -37,11 +37,11 @@ public function registerBundles()
 
 ### Step 3: Configure the bundle
 
-Import the routing in `app/config/routing.yml`
+Import the routing in `app/config/routing.xml`
 
 ``` yaml
 sherlockode_user_confirmation:
-    resource: "@SherlockodeUserConfirmationBundle/Resources/config/routing.yml"
+    resource: "@SherlockodeUserConfirmationBundle/Resources/config/routing.xml"
 ```
 
 Then create the configuration in `app/config/config.yml`
