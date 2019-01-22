@@ -4,7 +4,9 @@ namespace Sherlockode\UserConfirmationBundle\Controller;
 
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
+use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Form\Type\ConfirmPasswordType;
+use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,17 +18,42 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AccountConfirmationController extends Controller
 {
+    /**
+     * @var UserManagerInterface
+     */
     private $userManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
     private $tokenStorage;
 
     /**
-     * @param UserManagerInterface  $userManager
-     * @param TokenStorageInterface $tokenStorage
+     * @var TokenGeneratorInterface
      */
-    public function __construct(UserManagerInterface $userManager, TokenStorageInterface $tokenStorage)
-    {
+    private $tokenGenerator;
+
+    /**
+     * @var MailManagerInterface
+     */
+    private $mailManager;
+
+    /**
+     * @param UserManagerInterface    $userManager
+     * @param TokenStorageInterface   $tokenStorage
+     * @param TokenGeneratorInterface $tokenGenerator
+     * @param MailManagerInterface    $mailManager
+     */
+    public function __construct(
+        UserManagerInterface $userManager,
+        TokenStorageInterface $tokenStorage,
+        TokenGeneratorInterface $tokenGenerator,
+        MailManagerInterface $mailManager
+    ) {
         $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
+        $this->tokenGenerator = $tokenGenerator;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -64,5 +91,34 @@ class AccountConfirmationController extends Controller
             'form' => $form->createView(),
             'parentTemplate' => $this->getParameter('sherlockode_user_confirmation.templates.confirmation_form'),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return Response
+     */
+    public function sendConfirmationEmailAction(Request $request, $id)
+    {
+        $user = $this->userManager->findUserBy(['id' => $id]);
+        if (!$user instanceof UserInterface) {
+            throw $this->createAccessDeniedException('Access denied');
+        }
+
+        $referer = $request->server->get('HTTP_REFERER');
+
+        if ($user->isEnabled()) {
+            return $this->redirect($referer);
+        }
+
+        if ($user->getConfirmationToken() === null) {
+            $user->setConfirmationToken($this->tokenGenerator->generateToken());
+            $this->userManager->updateUser($user);
+        }
+
+        $this->mailManager->sendAccountConfirmationEmail($user);
+
+        return $this->redirect($referer);
     }
 }
