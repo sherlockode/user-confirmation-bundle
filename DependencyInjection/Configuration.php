@@ -26,7 +26,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('confirmation.email.subject')
                 ->end()
                 ->arrayNode('templates')
-                    ->isRequired()
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('confirmation_form')
                             ->defaultValue('@SherlockodeUserConfirmation/Form/confirmation.html.twig')
