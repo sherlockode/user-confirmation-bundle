@@ -6,7 +6,7 @@ user visits a confirmation link sent by email and sets a password.
 
 ## Prerequisites
 
-This version of the bundle requires Symfony 3.* and FOSUserBundle
+This version of the bundle requires Symfony 3.* or 4.* and FOSUserBundle
 
 ## Installation
 
