@@ -3,4 +3,7 @@
     <route id="sherlockode_user_confirmation_set_password" path="/registration/{confirmationToken}">
         <default key="_controller">sherlockode_user_confirmation.controller.confirmation:setPasswordAction</default>
     </route>
+    <route id="sherlockode_user_confirmation_send_confirmation" path="/send-confirmation/{id}">
+        <default key="_controller">sherlockode_user_confirmation.controller.confirmation:sendConfirmationEmailAction</default>
+    </route>
 </routes>

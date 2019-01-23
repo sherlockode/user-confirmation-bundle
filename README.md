@@ -94,3 +94,13 @@ sherlockode_user_confirmation:
 ```
 
 In this template, you have access to the `user` object, and to a variable named `confirmationUrl` which contains the url to access the confirmation form.
+
+### Send confirmation email
+
+If you want to send the confirmation again for an existing user, use the following link : 
+
+``` twig
+<a href="{{ path('sherlockode_user_confirmation_send_confirmation', {id: userId}) }}">
+    Send confirmation email
+</a>
+```
