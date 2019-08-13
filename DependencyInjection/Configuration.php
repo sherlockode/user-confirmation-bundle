@@ -12,8 +12,9 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $tb = new TreeBuilder();
-        $root = $tb->root('sherlockode_user_confirmation');
+        $tb = new TreeBuilder('sherlockode_user_confirmation');
+        // BC layer for symfony/config < 4.2
+        $root = \method_exists($tb, 'getRootNode') ? $tb->getRootNode() : $tb->root('sherlockode_user_confirmation');
         $root
             ->children()
                 ->scalarNode('from_email')
