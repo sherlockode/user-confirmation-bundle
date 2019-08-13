@@ -68,7 +68,7 @@ class AccountConfirmationController extends Controller
     ) {
         $user = $this->userManager->findUserByConfirmationToken($confirmationToken);
         if (!$user instanceof UserInterface) {
-            throw $this->createAccessDeniedException('Access denied');
+            throw $this->createAccessDeniedException();
         }
 
         $form = $this->createForm(ConfirmPasswordType::class);
@@ -103,7 +103,7 @@ class AccountConfirmationController extends Controller
     {
         $user = $this->userManager->findUserBy(['id' => $id]);
         if (!$user instanceof UserInterface) {
-            throw $this->createAccessDeniedException('Access denied');
+            throw $this->createAccessDeniedException();
         }
 
         $referer = $request->server->get('HTTP_REFERER');
