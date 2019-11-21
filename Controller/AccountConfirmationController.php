@@ -7,7 +7,7 @@ use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Form\Type\ConfirmPasswordType;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * Class AccountConfirmationController
  */
-class AccountConfirmationController extends Controller
+class AccountConfirmationController extends AbstractController
 {
     /**
      * @var UserManagerInterface

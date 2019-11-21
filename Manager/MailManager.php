@@ -2,10 +2,10 @@
 
 namespace Sherlockode\UserConfirmationBundle\Manager;
 
+use FOS\UserBundle\Model\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use FOS\UserBundle\Model\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MailManager implements MailManagerInterface
 {
