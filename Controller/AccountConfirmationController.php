@@ -39,21 +39,37 @@ class AccountConfirmationController extends AbstractController
     private $mailManager;
 
     /**
+     * @var string
+     */
+    private $redirectionRoute;
+
+    /**
+     * @var string
+     */
+    private $confirmationFormTemplate;
+
+    /**
      * @param UserManagerInterface    $userManager
      * @param TokenStorageInterface   $tokenStorage
      * @param TokenGeneratorInterface $tokenGenerator
      * @param MailManagerInterface    $mailManager
+     * @param string                  $redirectionRoute
+     * @param string                  $confirmationFormTemplate
      */
     public function __construct(
         UserManagerInterface $userManager,
         TokenStorageInterface $tokenStorage,
         TokenGeneratorInterface $tokenGenerator,
-        MailManagerInterface $mailManager
+        MailManagerInterface $mailManager,
+        $redirectionRoute,
+        $confirmationFormTemplate
     ) {
         $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
         $this->tokenGenerator = $tokenGenerator;
         $this->mailManager = $mailManager;
+        $this->redirectionRoute = $redirectionRoute;
+        $this->confirmationFormTemplate = $confirmationFormTemplate;
     }
 
     /**
@@ -82,14 +98,12 @@ class AccountConfirmationController extends AbstractController
             $usernamePasswordToken = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->tokenStorage->setToken($usernamePasswordToken);
 
-            return $this->redirectToRoute(
-                $this->getParameter('sherlockode_user_confirmation.redirect_after_confirmation')
-            );
+            return $this->redirectToRoute($this->redirectionRoute);
         }
 
         return $this->render('@SherlockodeUserConfirmation/Form/confirmation_content.html.twig', [
             'form' => $form->createView(),
-            'parentTemplate' => $this->getParameter('sherlockode_user_confirmation.templates.confirmation_form'),
+            'parentTemplate' => $this->confirmationFormTemplate,
         ]);
     }
 
