@@ -21,7 +21,7 @@ class ConfirmPasswordType extends AbstractType
     {
         $builder
             ->add(
-                'password',
+                'plainPassword',
                 RepeatedType::class,
                 [
                     'type' => PasswordType::class,
@@ -32,7 +32,7 @@ class ConfirmPasswordType extends AbstractType
                     ],
                     'second_options' => [
                         'attr' => ['placeholder' => 'confirmation.form.password_confirm']
-                    ]
+                    ],
                 ]
             )
         ;
@@ -43,6 +43,9 @@ class ConfirmPasswordType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefault('translation_domain', 'SherlockodeUserConfirmationBundle');
+        $resolver->setDefaults([
+            'validation_groups' => ['ResetPassword'],
+            'translation_domain' => 'SherlockodeUserConfirmationBundle',
+        ]);
     }
 }
