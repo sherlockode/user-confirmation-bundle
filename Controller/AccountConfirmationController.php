@@ -87,11 +87,12 @@ class AccountConfirmationController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $form = $this->createForm(ConfirmPasswordType::class);
+        $form = $this->createForm(ConfirmPasswordType::class, $user, [
+            'data_class' => $this->userManager->getClass(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPlainPassword($form->getData()['password']);
             $user->setConfirmationToken(null);
             $user->setEnabled(true);
             $this->userManager->updateUser($user);
