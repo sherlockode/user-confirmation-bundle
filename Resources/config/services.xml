@@ -6,6 +6,7 @@
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="fos_user.util.token_generator"/>
             <argument type="service" id="sherlockode_user_confirmation.mail_manager"/>
+            <argument type="service" id="event_dispatcher"/>
             <argument>%sherlockode_user_confirmation.redirect_after_confirmation%</argument>
             <argument>%sherlockode_user_confirmation.templates.confirmation_form%</argument>
             <tag name="controller.service_arguments"/>
