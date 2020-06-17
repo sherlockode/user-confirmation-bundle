@@ -2,12 +2,16 @@
 
 namespace Sherlockode\UserConfirmationBundle\Controller;
 
+use FOS\UserBundle\Event\FilterUserResponseEvent;
+use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Form\Type\ConfirmPasswordType;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -39,6 +43,11 @@ class AccountConfirmationController extends AbstractController
     private $mailManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @var string
      */
     private $redirectionRoute;
@@ -49,18 +58,20 @@ class AccountConfirmationController extends AbstractController
     private $confirmationFormTemplate;
 
     /**
-     * @param UserManagerInterface    $userManager
-     * @param TokenStorageInterface   $tokenStorage
-     * @param TokenGeneratorInterface $tokenGenerator
-     * @param MailManagerInterface    $mailManager
-     * @param string                  $redirectionRoute
-     * @param string                  $confirmationFormTemplate
+     * @param UserManagerInterface     $userManager
+     * @param TokenStorageInterface    $tokenStorage
+     * @param TokenGeneratorInterface  $tokenGenerator
+     * @param MailManagerInterface     $mailManager
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param string                   $redirectionRoute
+     * @param string                   $confirmationFormTemplate
      */
     public function __construct(
         UserManagerInterface $userManager,
         TokenStorageInterface $tokenStorage,
         TokenGeneratorInterface $tokenGenerator,
         MailManagerInterface $mailManager,
+        EventDispatcherInterface $eventDispatcher,
         $redirectionRoute,
         $confirmationFormTemplate
     ) {
@@ -68,6 +79,7 @@ class AccountConfirmationController extends AbstractController
         $this->tokenStorage = $tokenStorage;
         $this->tokenGenerator = $tokenGenerator;
         $this->mailManager = $mailManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->redirectionRoute = $redirectionRoute;
         $this->confirmationFormTemplate = $confirmationFormTemplate;
     }
@@ -99,7 +111,12 @@ class AccountConfirmationController extends AbstractController
             $usernamePasswordToken = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->tokenStorage->setToken($usernamePasswordToken);
 
-            return $this->redirectToRoute($this->redirectionRoute);
+            $url = $this->generateUrl($this->redirectionRoute);
+            $response = new RedirectResponse($url);
+
+            $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_CONFIRMED, new FilterUserResponseEvent($user, $request, $response));
+
+            return $response;
         }
 
         return $this->render('@SherlockodeUserConfirmation/Form/confirmation_content.html.twig', [
