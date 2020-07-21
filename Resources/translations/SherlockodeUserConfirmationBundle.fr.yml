@@ -10,7 +10,6 @@ confirmation:
 
             Cordialement,
     form:
-        passwords_must_match: Les mots de passes doivent correspondre
         password: Mot de passe
         password_confirm: Confirmer le mot de passe
         submit_button: Je créé mon compte
