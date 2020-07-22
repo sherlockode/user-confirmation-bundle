@@ -14,6 +14,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -114,7 +115,12 @@ class AccountConfirmationController extends AbstractController
             $url = $this->generateUrl($this->redirectionRoute);
             $response = new RedirectResponse($url);
 
-            $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_CONFIRMED, new FilterUserResponseEvent($user, $request, $response));
+            $event = new FilterUserResponseEvent($user, $request, $response);
+            if (Kernel::VERSION_ID < 40300) {
+                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_CONFIRMED, $event);
+            } else {
+                $this->eventDispatcher->dispatch($event, FOSUserEvents::REGISTRATION_CONFIRMED);
+            }
 
             return $response;
         }
