@@ -1,0 +1,3 @@
+confirmation:
+    form:
+        passwords_must_match: Passwords must match
