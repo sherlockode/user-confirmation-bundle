@@ -12,41 +12,35 @@ This version of the bundle requires Symfony 3.* or 4.* and FOSUserBundle
 
 ### Step 1: Install SherlockodeUserConfirmationBundle
 
-The best way to install this bundle is to rely on [Composer](https://getcomposer.org/):
+Install with [Composer](https://getcomposer.org/):
 
-``` bash
+```bash
 $ composer require sherlockode/user-confirmation-bundle
 ```
 
-### Step 2: Enable the bundle
+Enable the bundle in the Symfony kernel:
 
-Enable the bundle in the kernel
-
-``` php
+```php
 <?php
-// app/AppKernel.php
-
-public function registerBundles()
-{
-    $bundles = [
-        // ...
-        new Sherlockode\UserConfirmationBundle\SherlockodeUserConfirmationBundle(),
-    ];
-}
+// config/bundles.php
+return [
+    // ...
+    Sherlockode\UserConfirmationBundle\SherlockodeUserConfirmationBundle::class => ['all' => true],
+];
 ```
 
-### Step 3: Configure the bundle
+### Step 2: Configure the bundle
 
-Import the routing in `app/config/routing.xml`
+Import the routing in `config/routes.yaml`
 
-``` yaml
+```yaml
 sherlockode_user_confirmation:
     resource: "@SherlockodeUserConfirmationBundle/Resources/config/routing.xml"
 ```
 
-Then create the configuration in `app/config/config.yml`
+Then create the configuration in `config/packages/sherlockode_user_confirmation.yaml`
 
-``` yaml
+```yaml
 sherlockode_user_confirmation:
     from_email: no-reply@awesome.com                # From email address
     email_subject: Please confirm your account      # The subject for the confirmation email (optional)
@@ -57,17 +51,17 @@ sherlockode_user_confirmation:
 
 ### Extend the confirmation form template
 
-To extend the confirmation form template, just update your `config.yml`
+To extend the confirmation form template, just update your `sherlockode_user_confirmation.yaml`
 
-``` yaml
+```yaml
 sherlockode_user_confirmation:
     templates:
-        confirmation_form: '@App/Registration/confirmation.html.twig'
+        confirmation_form: 'Registration/confirmation.html.twig'
 ```
 
 Then in your template, add a placeholder for the block `sherlockode_user_confirmation_form`
 
-``` twig
+```twig
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,10 +81,10 @@ Then in your template, add a placeholder for the block `sherlockode_user_confirm
 
 If you want to extend the confirmation email template, you should add the path in your `config.yml`
 
-``` yaml
+```yaml
 sherlockode_user_confirmation:
     templates:
-        confirmation_email: '@App/Email/registration.html.twig'
+        confirmation_email: 'Email/registration.html.twig'
 ```
 
 In this template, you have access to the `user` object, and to a variable named `confirmationUrl` which contains the url to access the confirmation form.
@@ -99,7 +93,7 @@ In this template, you have access to the `user` object, and to a variable named 
 
 If you want to send the confirmation again for an existing user, use the following link : 
 
-``` twig
+```twig
 <a href="{{ path('sherlockode_user_confirmation_send_confirmation', {id: userId}) }}">
     Send confirmation email
 </a>
