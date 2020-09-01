@@ -8,10 +8,6 @@
         {
             "name": "Sherlockode",
             "email": "contact@sherlockode.fr"
-        },
-        {
-            "name": "Neil Peyssard",
-            "email": "neil@sherlockode.fr"
         }
     ],
     "autoload": {
