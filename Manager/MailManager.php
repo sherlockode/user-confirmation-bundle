@@ -3,9 +3,9 @@
 namespace Sherlockode\UserConfirmationBundle\Manager;
 
 use FOS\UserBundle\Model\UserInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment as TwigEnvironment;
 
 class MailManager implements MailManagerInterface
 {
@@ -15,9 +15,9 @@ class MailManager implements MailManagerInterface
     private $mailer;
 
     /**
-     * @var EngineInterface
+     * @var TwigEnvironment
      */
-    private $templating;
+    private $twig;
 
     /**
      * @var UrlGeneratorInterface
@@ -48,7 +48,7 @@ class MailManager implements MailManagerInterface
      * MailManager constructor.
      *
      * @param \Swift_Mailer         $mailer
-     * @param EngineInterface       $templating
+     * @param TwigEnvironment       $twig
      * @param UrlGeneratorInterface $urlGenerator
      * @param TranslatorInterface   $translator
      * @param string                $senderEmail
@@ -57,7 +57,7 @@ class MailManager implements MailManagerInterface
      */
     public function __construct(
         \Swift_Mailer $mailer,
-        EngineInterface $templating,
+        TwigEnvironment $twig,
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
         $senderEmail,
@@ -65,7 +65,7 @@ class MailManager implements MailManagerInterface
         $emailSubject
     ) {
         $this->mailer = $mailer;
-        $this->templating = $templating;
+        $this->twig = $twig;
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
         $this->senderEmail = $senderEmail;
@@ -92,7 +92,7 @@ class MailManager implements MailManagerInterface
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $body = $this->templating->render(
+        $body = $this->twig->render(
             $this->confirmationEmailTemplate,
             [
                 'user' => $user,

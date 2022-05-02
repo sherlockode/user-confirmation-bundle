@@ -13,7 +13,7 @@
         </service>
         <service id="sherlockode_user_confirmation.mail_manager" class="Sherlockode\UserConfirmationBundle\Manager\MailManager">
             <argument type="service" id="mailer"/>
-            <argument type="service" id="templating"/>
+            <argument type="service" id="twig"/>
             <argument type="service" id="router"/>
             <argument type="service" id="translator"/>
             <argument>%sherlockode_user_confirmation.from_email%</argument>
