@@ -3,6 +3,9 @@
 namespace Sherlockode\UserConfirmationBundle\Manager;
 
 use FOS\UserBundle\Model\UserInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
@@ -10,7 +13,7 @@ use Twig\Environment as TwigEnvironment;
 class MailManager implements MailManagerInterface
 {
     /**
-     * @var \Swift_Mailer
+     * @var MailerInterface
      */
     private $mailer;
 
@@ -47,7 +50,7 @@ class MailManager implements MailManagerInterface
     /**
      * MailManager constructor.
      *
-     * @param \Swift_Mailer         $mailer
+     * @param MailerInterface       $mailer
      * @param TwigEnvironment       $twig
      * @param UrlGeneratorInterface $urlGenerator
      * @param TranslatorInterface   $translator
@@ -56,7 +59,7 @@ class MailManager implements MailManagerInterface
      * @param string                $emailSubject
      */
     public function __construct(
-        \Swift_Mailer $mailer,
+        MailerInterface $mailer,
         TwigEnvironment $twig,
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
@@ -108,20 +111,24 @@ class MailManager implements MailManagerInterface
      * @param string $to
      * @param string $subject
      * @param string $body
-     * @param string $contentType
      *
      * @return bool true on success, false otherwise
      */
-    private function sendMessage($from, $to, $subject, $body, $contentType = 'text/html')
+    private function sendMessage($from, $to, $subject, $body)
     {
-        $mail = new \Swift_Message();
+        $mail = new Email();
         $mail
-            ->setFrom($from)
-            ->setTo($to)
-            ->setSubject($subject)
-            ->setBody($body)
-            ->setContentType($contentType);
+            ->from($from)
+            ->to($to)
+            ->subject($subject)
+            ->html($body);
 
-        return $this->mailer->send($mail) > 0;
+        try {
+            $this->mailer->send($mail);
+        } catch (TransportExceptionInterface $exception) {
+            return false;
+        }
+
+        return true;
     }
 }
