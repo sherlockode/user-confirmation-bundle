@@ -9,7 +9,9 @@
             <argument type="service" id="event_dispatcher"/>
             <argument>%sherlockode_user_confirmation.redirect_after_confirmation%</argument>
             <argument>%sherlockode_user_confirmation.templates.confirmation_form%</argument>
-            <tag name="controller.service_arguments"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
         <service id="sherlockode_user_confirmation.mail_manager" class="Sherlockode\UserConfirmationBundle\Manager\MailManager">
             <argument type="service" id="mailer"/>

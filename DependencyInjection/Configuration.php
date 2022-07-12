@@ -10,7 +10,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $tb = new TreeBuilder('sherlockode_user_confirmation');
         $root = $tb->getRootNode();
