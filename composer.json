@@ -21,6 +21,6 @@
         "symfony/framework-bundle": "^4.4|^5.0",
         "symfony/mailer": "^5.0",
         "symfony/twig-bundle": "^4.4|^5.0",
-        "twig/twig": "^1.0|^2.0|^3.0"
+        "twig/twig": "^2.0|^3.0"
     }
 }
