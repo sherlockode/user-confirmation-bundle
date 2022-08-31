@@ -7,6 +7,7 @@ use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
+use Sherlockode\UserConfirmationBundle\Event\UnknownTokenEvent;
 use Sherlockode\UserConfirmationBundle\Form\Type\ConfirmPasswordType;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -97,6 +98,17 @@ class AccountConfirmationController extends AbstractController
     ) {
         $user = $this->userManager->findUserByConfirmationToken($confirmationToken);
         if (!$user instanceof UserInterface) {
+            $event = new UnknownTokenEvent($confirmationToken);
+            if (Kernel::VERSION_ID < 40300) {
+                $this->eventDispatcher->dispatch(UnknownTokenEvent::class, $event);
+            } else {
+                $this->eventDispatcher->dispatch($event, UnknownTokenEvent::class);
+            }
+
+            if ($event->getResponse()) {
+                return $event->getResponse();
+            }
+
             throw $this->createAccessDeniedException();
         }
 
