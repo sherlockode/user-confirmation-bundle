@@ -18,6 +18,7 @@ class SherlockodeUserConfirmationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('sherlockode_user_confirmation.from_email', $config['from_email']);
+        $container->setParameter('sherlockode_user_confirmation.from_name', $config['from_name']);
         $container->setParameter(
             'sherlockode_user_confirmation.redirect_after_confirmation',
             $config['redirect_after_confirmation']

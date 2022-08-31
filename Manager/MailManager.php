@@ -5,6 +5,7 @@ namespace Sherlockode\UserConfirmationBundle\Manager;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -40,6 +41,11 @@ class MailManager implements MailManagerInterface
     /**
      * @var string
      */
+    private $senderName;
+
+    /**
+     * @var string
+     */
     private $confirmationEmailTemplate;
 
     /**
@@ -55,6 +61,7 @@ class MailManager implements MailManagerInterface
      * @param UrlGeneratorInterface $urlGenerator
      * @param TranslatorInterface   $translator
      * @param string                $senderEmail
+     * @param string                $senderName
      * @param string                $confirmationEmailTemplate
      * @param string                $emailSubject
      */
@@ -64,6 +71,7 @@ class MailManager implements MailManagerInterface
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
         $senderEmail,
+        $senderName,
         $confirmationEmailTemplate,
         $emailSubject
     ) {
@@ -72,6 +80,7 @@ class MailManager implements MailManagerInterface
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
         $this->senderEmail = $senderEmail;
+        $this->senderName = $senderName;
         $this->confirmationEmailTemplate = $confirmationEmailTemplate;
         $this->emailSubject = $emailSubject;
     }
@@ -103,18 +112,30 @@ class MailManager implements MailManagerInterface
             ]
         );
 
-        return $this->sendMessage($this->senderEmail, $user->getEmail(), $subject, $body);
+        return $this->sendMessage($this->getExpeditor(), $user->getEmail(), $subject, $body);
     }
 
     /**
-     * @param string $from
-     * @param string $to
-     * @param string $subject
-     * @param string $body
+     * @return Address
+     */
+    private function getExpeditor(): Address
+    {
+        if ($this->senderName) {
+            return new Address($this->senderEmail, $this->senderName);
+        }
+
+        return new Address($this->senderEmail);
+    }
+
+    /**
+     * @param Address $from
+     * @param string  $to
+     * @param string  $subject
+     * @param string  $body
      *
      * @return bool true on success, false otherwise
      */
-    private function sendMessage($from, $to, $subject, $body)
+    private function sendMessage(Address $from, $to, $subject, $body)
     {
         $mail = new Email();
         $mail
