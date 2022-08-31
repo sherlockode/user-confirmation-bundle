@@ -19,6 +19,7 @@
             <argument type="service" id="router"/>
             <argument type="service" id="translator"/>
             <argument>%sherlockode_user_confirmation.from_email%</argument>
+            <argument>%sherlockode_user_confirmation.from_name%</argument>
             <argument>%sherlockode_user_confirmation.templates.confirmation_email%</argument>
             <argument>%sherlockode_user_confirmation.email_subject%</argument>
         </service>

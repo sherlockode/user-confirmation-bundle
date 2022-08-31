@@ -43,6 +43,7 @@ Then create the configuration in `config/packages/sherlockode_user_confirmation.
 ```yaml
 sherlockode_user_confirmation:
     from_email: no-reply@awesome.com                # From email address
+    from_name: John Doe                             # Name of the expeditor
     email_subject: Please confirm your account      # The subject for the confirmation email (optional)
     redirect_after_confirmation: admin_dashboard    # The route name to redirect the user after confirmation
 ```
