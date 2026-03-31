@@ -6,7 +6,7 @@ user visits a confirmation link sent by email and sets a password.
 
 ## Prerequisites
 
-This version of the bundle requires Symfony 3.* or 4.* and FOSUserBundle
+This version of the bundle requires Symfony 7.* and FOSUserBundle
 
 ## Installation
 
@@ -35,7 +35,8 @@ Import the routing in `config/routes.yaml`
 
 ```yaml
 sherlockode_user_confirmation:
-    resource: "@SherlockodeUserConfirmationBundle/Resources/config/routing.xml"
+    resource: "@SherlockodeUserConfirmationBundle/Controller/"
+    type: attribute
 ```
 
 Then create the configuration in `config/packages/sherlockode_user_confirmation.yaml`
