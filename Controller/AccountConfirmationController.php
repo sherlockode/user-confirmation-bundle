@@ -11,11 +11,13 @@ use Sherlockode\UserConfirmationBundle\Event\UnknownTokenEvent;
 use Sherlockode\UserConfirmationBundle\Form\Type\ConfirmPasswordType;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -69,13 +71,17 @@ class AccountConfirmationController extends AbstractController
      * @param string                   $confirmationFormTemplate
      */
     public function __construct(
+        #[Autowire(service: 'fos_user.user_manager')]
         UserManagerInterface $userManager,
         TokenStorageInterface $tokenStorage,
+        #[Autowire(service: 'fos_user.util.token_generator')]
         TokenGeneratorInterface $tokenGenerator,
         MailManagerInterface $mailManager,
         EventDispatcherInterface $eventDispatcher,
-        $redirectionRoute,
-        $confirmationFormTemplate
+        #[Autowire(param: 'sherlockode_user_confirmation.redirect_after_confirmation')]
+        string $redirectionRoute,
+        #[Autowire(param: 'sherlockode_user_confirmation.templates.confirmation_form')]
+        string $confirmationFormTemplate,
     ) {
         $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
@@ -86,12 +92,7 @@ class AccountConfirmationController extends AbstractController
         $this->confirmationFormTemplate = $confirmationFormTemplate;
     }
 
-    /**
-     * @param Request $request
-     * @param string  $confirmationToken
-     *
-     * @return Response
-     */
+    #[Route('/registration/{confirmationToken}', name: 'sherlockode_user_confirmation_set_password')]
     public function setPasswordAction(
         Request $request,
         $confirmationToken
@@ -143,12 +144,7 @@ class AccountConfirmationController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param int     $id
-     *
-     * @return Response
-     */
+    #[Route('/send-confirmation/{id}', name: 'sherlockode_user_confirmation_send_confirmation')]
     public function sendConfirmationEmailAction(Request $request, $id)
     {
         $user = $this->userManager->findUserBy(['id' => $id]);

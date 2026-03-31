@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Sherlockode\UserConfirmationBundle\Controller\AccountConfirmationController:
+        public: true
+        tags: ['controller.service_arguments']
+
+    sherlockode_user_confirmation.controller.confirmation:
+        alias: Sherlockode\UserConfirmationBundle\Controller\AccountConfirmationController
+        public: true
+
+    sherlockode_user_confirmation.mail_manager:
+        class: Sherlockode\UserConfirmationBundle\Manager\MailManager
+
+    Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface:
+        alias: sherlockode_user_confirmation.mail_manager
+
+    sherlockode_user_confirmation.listener.user:
+        class: Sherlockode\UserConfirmationBundle\EventListener\UserListener
