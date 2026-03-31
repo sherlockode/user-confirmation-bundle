@@ -122,7 +122,7 @@ class AccountConfirmationController extends AbstractController
             $user->setConfirmationToken(null);
             $user->setEnabled(true);
             $this->userManager->updateUser($user);
-            $usernamePasswordToken = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+            $usernamePasswordToken = new UsernamePasswordToken($user, 'main', $user->getRoles());
             $this->tokenStorage->setToken($usernamePasswordToken);
 
             $url = $this->generateUrl($this->redirectionRoute);
