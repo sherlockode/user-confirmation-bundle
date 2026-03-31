@@ -9,7 +9,6 @@ use Doctrine\ORM\Events;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 #[AsDoctrineListener(event: Events::prePersist)]
 #[AsDoctrineListener(event: Events::postPersist)]
@@ -31,7 +30,6 @@ class UserListener
      */
     public function __construct(
         MailManagerInterface $mailManager,
-        #[Autowire(service: 'fos_user.util.token_generator')]
         TokenGeneratorInterface $tokenGenerator,
     ) {
         $this->mailManager = $mailManager;

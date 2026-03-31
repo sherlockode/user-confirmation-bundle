@@ -3,7 +3,6 @@
 namespace Sherlockode\UserConfirmationBundle\Manager;
 
 use FOS\UserBundle\Model\UserInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -71,13 +70,9 @@ class MailManager implements MailManagerInterface
         TwigEnvironment $twig,
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
-        #[Autowire(param: 'sherlockode_user_confirmation.from_email')]
         string $senderEmail,
-        #[Autowire(param: 'sherlockode_user_confirmation.from_name')]
         string $senderName,
-        #[Autowire(param: 'sherlockode_user_confirmation.templates.confirmation_email')]
         string $confirmationEmailTemplate,
-        #[Autowire(param: 'sherlockode_user_confirmation.email_subject')]
         string $emailSubject,
     ) {
         $this->mailer = $mailer;
