@@ -2,7 +2,6 @@
 
 namespace Sherlockode\UserConfirmationBundle\EventListener;
 
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
@@ -10,8 +9,6 @@ use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
 
-#[AsDoctrineListener(event: Events::prePersist)]
-#[AsDoctrineListener(event: Events::postPersist)]
 class UserListener
 {
     /**
