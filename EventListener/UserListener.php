@@ -4,6 +4,7 @@ namespace Sherlockode\UserConfirmationBundle\EventListener;
 
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Events;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
@@ -24,8 +25,10 @@ class UserListener
      * @param MailManagerInterface    $mailManager
      * @param TokenGeneratorInterface $tokenGenerator
      */
-    public function __construct(MailManagerInterface $mailManager, TokenGeneratorInterface $tokenGenerator)
-    {
+    public function __construct(
+        MailManagerInterface $mailManager,
+        TokenGeneratorInterface $tokenGenerator,
+    ) {
         $this->mailManager = $mailManager;
         $this->tokenGenerator = $tokenGenerator;
     }

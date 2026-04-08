@@ -70,10 +70,10 @@ class MailManager implements MailManagerInterface
         TwigEnvironment $twig,
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
-        $senderEmail,
-        $senderName,
-        $confirmationEmailTemplate,
-        $emailSubject
+        string $senderEmail,
+        string $senderName,
+        string $confirmationEmailTemplate,
+        string $emailSubject,
     ) {
         $this->mailer = $mailer;
         $this->twig = $twig;

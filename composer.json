@@ -18,9 +18,9 @@
     "require": {
         "php": "^7.4|^8.0",
         "friendsofsymfony/user-bundle": "^2.2.4|^3.0|^4.0",
-        "symfony/framework-bundle": "^4.4|^5.0|^7.4",
-        "symfony/mailer": "^5.0|^7.4",
-        "symfony/twig-bundle": "^4.4|^5.0|^7.4",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/mailer": "^7.4",
+        "symfony/twig-bundle": "^7.4",
         "twig/twig": "^2.0|^3.0"
     }
 }
