@@ -1,0 +1,42 @@
+services:
+    Sherlockode\UserConfirmationBundle\Controller\AccountConfirmationController:
+        public: true
+        arguments:
+            - '@fos_user.user_manager'
+            - '@security.token_storage'
+            - '@fos_user.util.token_generator'
+            - '@sherlockode_user_confirmation.mail_manager'
+            - '@event_dispatcher'
+            - '%sherlockode_user_confirmation.redirect_after_confirmation%'
+            - '%sherlockode_user_confirmation.templates.confirmation_form%'
+            - '@form.factory'
+            - '@twig'
+            - '@router'
+
+    sherlockode_user_confirmation.controller.confirmation:
+        alias: Sherlockode\UserConfirmationBundle\Controller\AccountConfirmationController
+        public: true
+
+    sherlockode_user_confirmation.mail_manager:
+        class: Sherlockode\UserConfirmationBundle\Manager\MailManager
+        arguments:
+            - '@mailer.mailer'
+            - '@twig'
+            - '@router'
+            - '@translator'
+            - '%sherlockode_user_confirmation.from_email%'
+            - '%sherlockode_user_confirmation.from_name%'
+            - '%sherlockode_user_confirmation.templates.confirmation_email%'
+            - '%sherlockode_user_confirmation.email_subject%'
+
+    Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface:
+        alias: sherlockode_user_confirmation.mail_manager
+
+    sherlockode_user_confirmation.listener.user:
+        class: Sherlockode\UserConfirmationBundle\EventListener\UserListener
+        arguments:
+            - '@sherlockode_user_confirmation.mail_manager'
+            - '@fos_user.util.token_generator'
+        tags:
+            - { name: 'doctrine.event_listener', event: 'prePersist' }
+            - { name: 'doctrine.event_listener', event: 'postPersist' }

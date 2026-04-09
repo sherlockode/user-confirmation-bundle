@@ -10,19 +10,23 @@ use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Event\UnknownTokenEvent;
 use Sherlockode\UserConfirmationBundle\Form\Type\ConfirmPasswordType;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Twig\Environment as TwigEnvironment;
 
 /**
  * Class AccountConfirmationController
  */
-class AccountConfirmationController extends AbstractController
+class AccountConfirmationController
 {
     /**
      * @var UserManagerInterface
@@ -60,6 +64,21 @@ class AccountConfirmationController extends AbstractController
     private $confirmationFormTemplate;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @var TwigEnvironment
+     */
+    private $twig;
+
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
+    /**
      * @param UserManagerInterface     $userManager
      * @param TokenStorageInterface    $tokenStorage
      * @param TokenGeneratorInterface  $tokenGenerator
@@ -67,6 +86,9 @@ class AccountConfirmationController extends AbstractController
      * @param EventDispatcherInterface $eventDispatcher
      * @param string                   $redirectionRoute
      * @param string                   $confirmationFormTemplate
+     * @param FormFactoryInterface     $formFactory
+     * @param TwigEnvironment          $twig
+     * @param UrlGeneratorInterface    $urlGenerator
      */
     public function __construct(
         UserManagerInterface $userManager,
@@ -74,8 +96,11 @@ class AccountConfirmationController extends AbstractController
         TokenGeneratorInterface $tokenGenerator,
         MailManagerInterface $mailManager,
         EventDispatcherInterface $eventDispatcher,
-        $redirectionRoute,
-        $confirmationFormTemplate
+        string $redirectionRoute,
+        string $confirmationFormTemplate,
+        FormFactoryInterface $formFactory,
+        TwigEnvironment $twig,
+        UrlGeneratorInterface $urlGenerator,
     ) {
         $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
@@ -84,14 +109,12 @@ class AccountConfirmationController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->redirectionRoute = $redirectionRoute;
         $this->confirmationFormTemplate = $confirmationFormTemplate;
+        $this->formFactory = $formFactory;
+        $this->twig = $twig;
+        $this->urlGenerator = $urlGenerator;
     }
 
-    /**
-     * @param Request $request
-     * @param string  $confirmationToken
-     *
-     * @return Response
-     */
+    #[Route('/registration/{confirmationToken}', name: 'sherlockode_user_confirmation_set_password')]
     public function setPasswordAction(
         Request $request,
         $confirmationToken
@@ -109,10 +132,10 @@ class AccountConfirmationController extends AbstractController
                 return $event->getResponse();
             }
 
-            throw $this->createAccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
-        $form = $this->createForm(ConfirmPasswordType::class, $user, [
+        $form = $this->formFactory->create(ConfirmPasswordType::class, $user, [
             'data_class' => $this->userManager->getClass(),
         ]);
         $form->handleRequest($request);
@@ -121,10 +144,10 @@ class AccountConfirmationController extends AbstractController
             $user->setConfirmationToken(null);
             $user->setEnabled(true);
             $this->userManager->updateUser($user);
-            $usernamePasswordToken = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+            $usernamePasswordToken = new UsernamePasswordToken($user, 'main', $user->getRoles());
             $this->tokenStorage->setToken($usernamePasswordToken);
 
-            $url = $this->generateUrl($this->redirectionRoute);
+            $url = $this->urlGenerator->generate($this->redirectionRoute);
             $response = new RedirectResponse($url);
 
             $event = new FilterUserResponseEvent($user, $request, $response);
@@ -137,29 +160,24 @@ class AccountConfirmationController extends AbstractController
             return $response;
         }
 
-        return $this->render('@SherlockodeUserConfirmation/Form/confirmation_content.html.twig', [
+        return new Response($this->twig->render('@SherlockodeUserConfirmation/Form/confirmation_content.html.twig', [
             'form' => $form->createView(),
             'parentTemplate' => $this->confirmationFormTemplate,
-        ]);
+        ]));
     }
 
-    /**
-     * @param Request $request
-     * @param int     $id
-     *
-     * @return Response
-     */
+    #[Route('/send-confirmation/{id}', name: 'sherlockode_user_confirmation_send_confirmation')]
     public function sendConfirmationEmailAction(Request $request, $id)
     {
         $user = $this->userManager->findUserBy(['id' => $id]);
         if (!$user instanceof UserInterface) {
-            throw $this->createAccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $referer = $request->server->get('HTTP_REFERER');
 
         if ($user->isEnabled()) {
-            return $this->redirect($referer);
+            return new RedirectResponse($referer);
         }
 
         if ($user->getConfirmationToken() === null) {
@@ -169,6 +187,6 @@ class AccountConfirmationController extends AbstractController
 
         $this->mailManager->sendAccountConfirmationEmail($user);
 
-        return $this->redirect($referer);
+        return new RedirectResponse($referer);
     }
 }

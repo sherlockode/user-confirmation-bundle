@@ -2,7 +2,9 @@
 
 namespace Sherlockode\UserConfirmationBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Events;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Sherlockode\UserConfirmationBundle\Manager\MailManagerInterface;
@@ -23,16 +25,18 @@ class UserListener
      * @param MailManagerInterface    $mailManager
      * @param TokenGeneratorInterface $tokenGenerator
      */
-    public function __construct(MailManagerInterface $mailManager, TokenGeneratorInterface $tokenGenerator)
-    {
+    public function __construct(
+        MailManagerInterface $mailManager,
+        TokenGeneratorInterface $tokenGenerator,
+    ) {
         $this->mailManager = $mailManager;
         $this->tokenGenerator = $tokenGenerator;
     }
 
     /**
-     * @param LifecycleEventArgs $args
+     * @param PrePersistEventArgs $args
      */
-    public function prePersist(LifecycleEventArgs $args)
+    public function prePersist(PrePersistEventArgs $args)
     {
         $object = $args->getObject();
 
@@ -46,9 +50,9 @@ class UserListener
         }
     }
     /**
-     * @param LifecycleEventArgs $args
+     * @param PostPersistEventArgs $args
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(PostPersistEventArgs $args)
     {
         $object = $args->getObject();
 
